@@ -1,58 +1,43 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { StackNavigator, createStackNavigator } from 'react-navigation'
-import Screens from './src/screens'
-import DrawerNav from './src/screens/DrawerNavigator'
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <_StackNavigator />
-    );
-  }
-}
 
 
-// new StackNavigator deprecated
-const _StackNavigator = createStackNavigator({
-  Home:{
-    screen: Screens.Home
-  },
+// TODO: drawer navigation in normal flow
 
-  Foods: {
-    screen: Screens.Foods
-  },
 
-  Profile: {
-    screen: Screens.Profile
-  },
+// routers
+import SignedOut from './src/router/signedout';
+import SignedIn  from './src/router/signedin';
+import {isSignedIn}  from './src/authentication'
+import createRootNavigator from './src/router/root';
 
-  Login: {
-    screen: Screens.Login
-  },
+class App extends React.Component {
+  constructor(props){
+    super(props)
 
-  Signup: {
-    screen: Screens.Signup
-  },
-
-  DrawerNavigator: {
-    screen: DrawerNav,
-    navigationOptions: {
-      header: null
+    this.state = {
+      signedIn: false,
+      checkedSIgnedIn: false
     }
   }
-}, {
-  navigationOptions: {
-    gesturesEnabled: false
-  }
-}) 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  componentDidMount(){
+    isSignedIn()
+      .then(res => this.setState({
+        signedIn: res,
+        checkedSIgnedIn: true
+      }))
+      .catch(err => alert('An error occured tryin to auth'))
+  }
+
+  render() {
+    const { checkedSIgnedIn, signedIn } = this.state
+
+    if (!checkedSIgnedIn){
+      return null
+    }
+    const Layout = createRootNavigator(signedIn)
+    return <Layout />
+    }
+}
+
+export default App;
