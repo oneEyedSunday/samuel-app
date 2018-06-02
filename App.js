@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppLoading, Asset, Font } from 'expo'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, FontAwesome } from '@expo/vector-icons'
 
 // TODO: drawer navigation in normal flow
 
@@ -29,7 +29,8 @@ class App extends React.Component {
     this.state = {
       signedIn: false,
       checkedSIgnedIn: false,
-      loadingComplete: false
+      loadingComplete: false,
+      user: undefined
     }
   }
 
@@ -72,7 +73,8 @@ class App extends React.Component {
           // ...Ionicons.font
           Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
           Roboto: require("native-base/Fonts/Roboto.ttf"),
-          Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+          Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+          FontAwesome: require('@expo/vector-icons/fonts/FontAwesome.ttf')
         })
       ])
     }

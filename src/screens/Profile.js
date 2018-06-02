@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
 import { Icon, Button, Container,  Header, Content, Left, Right , List , ListItem, Card, CardItem } from 'native-base'
-import {onSignOut} from '../authentication'
+import {destroyToken} from '../authentication'
 class Profile extends Component {
     static navigationOptions = {
         header: null,
@@ -65,9 +65,9 @@ class Profile extends Component {
         Alert.alert('Exit?','Really sign out?', [
             {text: 'No', onPress: () => {}},
             {text: 'Yes', onPress: () => {
-                onSignOut().then(() => {
-                    this.props.navigation.navigate('SignedOut')
-                })
+                    destroyToken().then(() => {
+                        this.props.navigation.navigate('SignedOut')
+                    })
             }}
         ])
     } 

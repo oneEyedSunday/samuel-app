@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Container, Header, Content, Tab, Tabs, Body, Title, Left, Right , Icon} from 'native-base';
 import DayTab from './Day'
 import WeekTab from './Week'
+import Foods from '../api/Foods'
+// import FoodImages from './../../assets/images';
 /**
  * Refactor Day, week and Month tabs to accept props 
  * and use init data from constructor to build
@@ -26,7 +28,7 @@ class Schedule extends Component {
                 </Header>
                 <Tabs>
                 <Tab heading="Day">
-                    <DayTab />
+                    <DayTab dayOfTheWeek='Saturday'   plan={Foods[0]}/>
                 </Tab>
                 <Tab heading="Week" >
                     <WeekTab />
