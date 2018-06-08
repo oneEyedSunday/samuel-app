@@ -1,14 +1,20 @@
 import React from 'react';
+import { Provider, connect } from 'react-redux'
 import { AppLoading, Asset, Font } from 'expo'
-import { Ionicons, FontAwesome } from '@expo/vector-icons'
+// import { Ionicons, FontAwesome } from '@expo/vector-icons'
+
+import store from './src/store'
+import { toggleLoading, authChecked } from './src/store/actions'
 
 // TODO: drawer navigation in normal flow
 
 
 // routers
+/*
 import SignedOut from './src/router/signedout';
 import SignedIn  from './src/router/signedin';
 import {isSignedIn}  from './src/authentication'
+*/
 import createRootNavigator from './src/router/root';
 import { YellowBox } from 'react-native'
 
@@ -24,38 +30,62 @@ class App extends React.Component {
   constructor(props){
     super(props)
     // YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated'])
-
-
+    this.state = {
+      loadingComplete: false
+    }
+    /*
     this.state = {
       signedIn: false,
       checkedSIgnedIn: false,
       loadingComplete: false,
       user: undefined
     }
+    */
   }
 
   componentDidMount(){
+    // where does persisiting auth token happen
+    // need 
+    /*
     isSignedIn()
       .then(res => this.setState({
         signedIn: res,
         checkedSIgnedIn: true
       }))
       .catch(err => alert('An error occured tryin to auth'))
-  }
+      */
+     store.dispatch(authChecked(true))
+    //  store.dispatch(toggleLoading())
+    }
+
+    
 
   render() {
+    console.log(store.getState())
+    console.log(this.state)
+  
     if (!this.state.loadingComplete) {
       return (
-        <AppLoading startAsync={this._loadResourcesAsync} onError={this._handleLoadingError} onFinish={this._handleFinsihLoading} />
+        <AppLoading startAsync={this._loadResourcesAsync} onError={this._handleLoadingError} onFinish={this._handleFinsihLoading} /> 
       )
     }
-    const { checkedSIgnedIn, signedIn } = this.state
 
-    if (!checkedSIgnedIn){
+    console.log('layout sequence')
+    
+    const { checkedSIgnedIn, signedIn } = store.getState()
+    if (checkedSIgnedIn == false){
+      console.log('i am here, checkSignedIn')
       return null
     }
+    console.log(signedIn)
     const Layout = createRootNavigator(signedIn)
-    return <Layout />
+    const ConnectedRoot = connect(mapStateToProps)(Layout)
+    return (
+      <Provider store={store} >
+        <Layout />
+      </Provider>
+      
+    )
     }
 
     _loadResourcesAsync = async  () => {
@@ -84,10 +114,24 @@ class App extends React.Component {
     }
 
     _handleFinsihLoading = () => {
+      // toggle loading complete
       this.setState({
         loadingComplete: true
       })
+      // store.dispatch(toggleLoading())
+      // console.log('returns with ', store.getState())
     }
 }
 
-export default App;
+mapStateToProps = state => {
+  const s = {
+    checkedSignedIn: state.checkedSIgnedIn,
+    signedIn: state.signedIn,
+    loadingComplete: state.loadingComplete,
+    user: state.user
+  }
+  console.log(s)
+  return s
+}
+
+export default App
