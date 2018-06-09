@@ -5,13 +5,20 @@ import { signInWithGoogleAsync } from '../authentication/googleAuth'
 import { logIn } from '../authentication/facebookAuth'
 import * as fromAuth from '../authentication'
 import { Alert } from 'react-native'
+import { connect } from 'react-redux'
+import { signIn} from '../store/actions'
+import Actions from '../store/actions/ActionTypes'
 
 
 class Login extends Component  {
+    /*
     state = {
         user: undefined
     }
+    */
 
+    // move these to actions
+    // use sagas for async, 
     loginWithFacebook = async () => await logIn().then(res => {
         Alert.alert(
             'Logged in!',
@@ -30,6 +37,8 @@ class Login extends Component  {
 
         fromAuth.persistToken()
     })
+
+
     loginWithGoogle = async () => await signInWithGoogleAsync().then(res => {
         // alert(res.user.name)
         // change state to be able to nav
@@ -51,7 +60,7 @@ class Login extends Component  {
 
 
     render(){
-        let { user } = this.state
+        let { user } = this.props
         return (
             <View style={styles.container}>  
                 {
@@ -80,7 +89,7 @@ class Login extends Component  {
                             <Icon.Button name='facebook' backgroundColor='#3b5998' onPress={this.loginWithFacebook} {...iconStyles} >
                                 Login with Facebook
                             </Icon.Button>
-                            <Icon.Button name='google' backgroundColor='#dd4b39' onPress={this.loginWithGoogle} {...iconStyles} >
+                            <Icon.Button name='google' backgroundColor='#dd4b39' onPress={this.props.attemptSignIn.bind(null, Actions.GOOGLE)} {...iconStyles} >
                                 Login with Google
                             </Icon.Button>
                         </View>                   
@@ -139,4 +148,12 @@ const styles = StyleSheet.create({
 })
 
 
-export default Login
+const mapStateToProps = state => ({
+    user : state.user
+})
+
+const mapDispatchToProps = dispatch => ({
+    attemptSignIn: provider => { dispatch(signIn(provider)) }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -1,9 +1,12 @@
 import  Actions from './ActionTypes'
 
 
-export function signIn (){
+// take a payload indicating type of auth
+export function signIn (provider){
+    console.log(provider)
     return {
-        type: Actions.SIGNIN
+        type: Actions.SIGNIN,
+        payload: provider
     }
 }
 
@@ -37,3 +40,5 @@ export function authChecked(status){
         payload: status
     }
 }
+
+

@@ -24,9 +24,11 @@ const initialState = {
 const reducer = (state =  initialState, action) => {
     switch(action.type){
         case ActionTypes.SIGNIN:
+        console.log('called')
             return {...state, loadingComplete: false}
 
         case ActionTypes.SIGNINSUCCESS:
+        console.log('sign in success called iwth', action.payload)
             return {
                 ...state,
                 loadingComplete: true,
